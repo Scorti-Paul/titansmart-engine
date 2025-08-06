@@ -91,7 +91,7 @@ const getProductById = async (model: any, req: any, res: any) => {
  * @access Private
  */
 const getProducts = async (model: any, _: any, res: any) => {
-  await model?.find({})?.then((data: any) => {
+  await model?.find({})?.populate("categoryID")?.then((data: any) => {
     res?.status(200)?.json({
       data,
     });

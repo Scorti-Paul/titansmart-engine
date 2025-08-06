@@ -27,15 +27,15 @@ const ProductSchema = new mongoose.Schema(
       },
     ],
     stock: {
-      currentStock: { type: mongoose.SchemaTypes.Number, required: true },
+      currentStock: { type: mongoose.SchemaTypes.Number, required: [true, "Current stock is required"] },
       threshold: {
         type: mongoose.SchemaTypes.Number,
-        required: true,
+        required: [true, "Threshold is required"],
       },
       stockStatus: {
         type: mongoose.SchemaTypes.String,
-        required: true,
-        enums: ["in-stock", "out-of-stock", "pre-order"],
+        required: [true, "Stock status is required"],
+        enum: ["in-stock", "out-of-stock", "pre-order"],
         default: "in-stock",
       },
     },
