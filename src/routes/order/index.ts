@@ -1,20 +1,20 @@
 import {
   createOrder,
   // deleteOrder,
-  // getOrders,
+  getOrders,
   // getOrderById,
   updateOrder,
   // patchOrder,
 } from "../../controllers/order";
-// import { OrderModel } from "../../database/schema/order";
+import { OrderModel } from "../../database/schema/order";
 
 const express = require("express");
 
 const router = express?.Router();
 
-// router.get("/api/orders", (req: any, res: any) =>
-//   getOrders(OrderModel, req, res)
-// );
+router.get("/api/orders", (req: any, res: any) =>
+  getOrders(OrderModel, req, res)
+);
 
 // router.get("/api/order", (req: any, res: any) =>
 //   getOrderById(OrderModel, req, res)

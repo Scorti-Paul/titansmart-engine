@@ -5,14 +5,14 @@ const PaymentSchema = new mongoose.Schema(
     paymentType: {
       type: mongoose.SchemaTypes.String,
       required: [true, "Payment type is required"],
-      enums: ["customer_order", "vendor_payout", "refund"],
+      enums: ["Customer order", "Vendor payout", "Refund"],
     },
-    orderID: {
+    order: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Order",
       required: [true, "Order ID is required"],
     },
-    userID: {
+    user: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",
       required: [true, "User ID is required"],
@@ -21,16 +21,20 @@ const PaymentSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.Number,
       required: [true, "Amount is required"],
     },
+    amountPaid: {
+      type: mongoose.SchemaTypes.Number,
+      required: [true, "Amount paid is required"],
+    },
     paymentStatus: {
       type: mongoose.SchemaTypes.String,
       required: [true, "Payment status is required"],
-      enums: ["part_payment", "completed", "failed"],
-      default: "part_payment",
+      enums: ["Part payment", "Completed", "Failed"],
+      default: "Part payment",
     },
     paymentMethod: {
       type: mongoose.SchemaTypes.String,
       required: [true, "Payment method is required"],
-      enum: ["pay_stack", "bank_transfer", "cash"],
+      enum: ["Paystack", "Bank transfer", "Cash"],
     },
     transactionID: {
       type: mongoose.SchemaTypes.String,

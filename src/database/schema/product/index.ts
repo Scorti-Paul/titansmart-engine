@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ProductSchema = new mongoose.Schema(
   {
     productName: { type: mongoose.SchemaTypes.String, required: true },
-    categoryID: {
+    category: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Category",
       required: true,
@@ -12,14 +12,14 @@ const ProductSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.String,
       required: true,
     },
-    tags: [{ type: mongoose.SchemaTypes.String, required: true }],
+    tags: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Tag", required: true }],
     amount: {
       type: mongoose.SchemaTypes.Number,
       required: true,
     },
     productView: { type: mongoose.SchemaTypes.Number, default: 0 },
     images: [
-      { type: mongoose.SchemaTypes.String, required: true, default: "" },
+      { type: mongoose.SchemaTypes.String, required: [true, "Image is required"], default: "" },
     ],
     colorVariants: [
       {

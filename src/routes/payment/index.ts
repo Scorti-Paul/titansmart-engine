@@ -19,7 +19,7 @@ router.get("/api/payment", (req: any, res: any) =>
   getPaymentById(PaymentModel, req, res)
 );
 
-router.put("/api/payment/:id", updatePayment);
+router.put("/api/payment/update", updatePayment);
 router.post("/api/payment/create", createPayment);
 router.delete("/api/payment/:id", deletePayment);
 

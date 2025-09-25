@@ -1,58 +1,59 @@
-import mongoose from "mongoose";
+import {Schema, SchemaTypes, model} from "mongoose";
 
-const OrderSchema = new mongoose.Schema(
+const OrderSchema = new Schema(
   {
-    userID: {
-      type: mongoose.SchemaTypes.ObjectId,
+    user: {
+      type: SchemaTypes.ObjectId,
       ref: "User",
-      required: [true, "User ID is required"],
+      required: [true, "User is required"],
     },
     orderNumber: {
-      type: mongoose.SchemaTypes.String,
+      type: SchemaTypes.String,
       required: [true, "Order number is required"],
       unique: [true, "Order number must be unique"],
     },
     products: [
       {
-        productID: {
-          type: mongoose.SchemaTypes.String,
-          required: [true, "Product ID is required"],
+        product: {
+          type: SchemaTypes.ObjectId,
+          ref: "Product",
+          required: [true, "Product is required"],
           unique: true,
         },
         quantity: {
-          type: mongoose.SchemaTypes.Number,
+          type: SchemaTypes.Number,
           required: [true, "Quantity is required"],
         },
         unitPrice: {
-          type: mongoose.SchemaTypes.Number,
+          type: SchemaTypes.Number,
           required: [true, "Unit price is required"],
         },
       },
     ],
     shippingInfo: {
       shipping: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: SchemaTypes.ObjectId,
         ref: "Shipping",
         required: [true, "Shipping information is required"],
       },
       deliveryCost: {
-        type: mongoose.SchemaTypes.Number,
+        type: SchemaTypes.Number,
         required: [true, "Delivery cost is required"],
       },
-      trackingNumber: { type: mongoose.SchemaTypes.String, required: [true, "Tracking number is required"] },
-      carrier: { type: mongoose.SchemaTypes.String, required: [true, "Carrier is required"] },
+      trackingNumber: { type: SchemaTypes.String, required: [true, "Tracking number is required"] },
+      carrier: { type: SchemaTypes.String, required: [true, "Carrier is required"] },
       estimatedDelivery: {
-        type: mongoose.SchemaTypes.Date,
+        type: SchemaTypes.Date,
       },
-      deliveredAt: { type: mongoose.SchemaTypes.Date, required: false },
+      deliveredAt: { type: SchemaTypes.Date, required: false },
       shippingStatus: {
-        type: mongoose.SchemaTypes.String,
+        type: SchemaTypes.String,
         enums: ["pending", "shipped", "in-transit", "delivered", "cancelled"],
         default: "pending",
       },
     },
     status: {
-      type: mongoose.SchemaTypes.String,
+      type: SchemaTypes.String,
       required: [true, "Order status is required"],
       enums: [
         "pending",
@@ -64,15 +65,15 @@ const OrderSchema = new mongoose.Schema(
       ],
     },
     paymentID: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: SchemaTypes.ObjectId,
       ref: "Payment",
       required: false,
     },
     totalAmount: {
-      type: mongoose.SchemaTypes.Number,
+      type: SchemaTypes.Number,
       required: [true, "Total amount is required"],
     },
-    description: { type: mongoose.SchemaTypes.String },
+    description: { type: SchemaTypes.String },
   },
   {
     toJSON: {
@@ -84,4 +85,4 @@ const OrderSchema = new mongoose.Schema(
   }
 );
 
-export const OrderModel = mongoose.model("Order", OrderSchema);
+export const OrderModel = model("Order", OrderSchema);

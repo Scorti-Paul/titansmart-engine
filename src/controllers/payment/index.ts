@@ -3,8 +3,39 @@ import { PaymentModel } from "../../database/schema/payment";
 import { handleErrors } from "../../utils";
 
 const createPayment = async (req: any, res: any) => {
+  const {
+    paymentType,
+    order,
+    user,
+    amount,
+    amountPaid,
+    paymentMethod,
+    transactionID,
+    remark,
+  } = req?.body;
+
+  let paymentStatus = "Part payment";
+
+  if (amount === amountPaid) {
+    paymentStatus = "Completed";
+  } else if (amountPaid >= 0 && amountPaid < amount) {
+    paymentStatus = "Part payment";
+  } else if (amountPaid > amount) {
+    paymentStatus = "Over payment";
+  } else if (amountPaid < 0) {
+    paymentStatus = "Invalid payment";
+  }
+
   const newPayment = new PaymentModel({
-    ...req?.body,
+    paymentType,
+    order,
+    user,
+    amount,
+    amountPaid,
+    paymentStatus,
+    paymentMethod,
+    transactionID,
+    remark,
   });
 
   await newPayment
@@ -29,18 +60,37 @@ const updatePayment = (req: any, res: any) => {
       message: "Data to update cannot be empty",
     });
   }
-  const { id, ...rest } = req?.body;
+
+  const { id, amount, amountPaid, ...rest } = req?.body;
 
   if (!id) {
     return res?.status(400)?.json({
       message: "id is required to update this data",
     });
   }
+  console.log("Updating payment with ID:", id);
+  let paymentStatus = "";
 
-  PaymentModel?.findOneAndUpdate({ _id: id }, rest, {
-    useFindAndModify: false,
-    new: true,
-  })
+  if (amount === amountPaid) {
+    paymentStatus = "Completed";
+  } else if (amountPaid >= 0 && amountPaid < amount) {
+    paymentStatus = "Part payment";
+  } else if (amountPaid > amount) {
+    paymentStatus = "Over payment";
+  } else if (amountPaid < 0) {
+    paymentStatus = "Invalid payment";
+  }
+
+  console.log("Update data:", { amount, amountPaid, ...rest, paymentStatus });
+
+  PaymentModel?.findOneAndUpdate(
+    { _id: id },
+    { ...rest, amount, amountPaid, paymentStatus },
+    {
+      useFindAndModify: false,
+      new: true,
+    }
+  )
     ?.then((response) => {
       res?.status(202)?.json({
         data: response,
@@ -82,11 +132,15 @@ const getPaymentById = async (model: any, req: any, res: any) => {
  * @access Private
  */
 const getPayments = async (model: any, _: any, res: any) => {
-  await model?.find({})?.then((data: any) => {
-    res?.status(200)?.json({
-      data,
+  await model
+    ?.find({})
+    ?.populate("user", "fullName firstName lastName phone email")
+    .populate("order", "orderNumber totalAmount")
+    .then((data: any) => {
+      res?.status(200)?.json({
+        data,
+      });
     });
-  });
 };
 
 const deletePayment = expressAsyncHandler(async (req: any, res: any) => {

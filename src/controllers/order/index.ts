@@ -104,4 +104,25 @@ const patchOrder = (req: any, res: any) => {
     });
 };
 
-export { createOrder, updateOrder, patchOrder };
+/**
+ * @description Get All Orders
+ * @route api/orders
+ * @access Private
+ */
+const getOrders = async (model: any, _: any, res: any) => {
+  await model
+    ?.find({})
+    ?.populate("user", "fullName firstName lastName email phone role avatar")
+    ?.populate(
+      "shippingInfo.shipping",
+      "region address digitalAddress closestMark description"
+    )
+    ?.populate("products.product", "productName sku amount images")
+    ?.then((data: any) => {
+      res?.status(200)?.json({
+        data,
+      });
+    });
+};
+
+export { createOrder, updateOrder, patchOrder, getOrders };

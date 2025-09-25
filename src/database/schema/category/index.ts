@@ -7,11 +7,6 @@ const CategorySchema = new mongoose.Schema(
       required: [true, "Category name is required"],
       unique: [true, "Category name must be unique"],
     },
-    type: {
-      type: mongoose.SchemaTypes.String,
-      required: [true, "Category type is required"],
-      unique: [true, "Category type must be unique"],
-    },
     slug: {
       type: mongoose.SchemaTypes.String,
       required: [true, "Category slug is required"],
@@ -20,8 +15,7 @@ const CategorySchema = new mongoose.Schema(
     description: {
       type: mongoose.SchemaTypes.String,
     },
-    isActive: { type: mongoose.SchemaTypes.Boolean, default: true },
-    image: { type: mongoose.SchemaTypes.String, required: false, default: "" },
+    isActive: { type: mongoose.SchemaTypes.Boolean, default: true }
   },
   {
     toJSON: {
@@ -32,4 +26,5 @@ const CategorySchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 export const CategoryModel = mongoose.model("Category", CategorySchema);

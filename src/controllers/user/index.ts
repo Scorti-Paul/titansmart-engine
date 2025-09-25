@@ -7,6 +7,7 @@ import {
   handleErrors,
   // sendMail,
 } from "../../utils";
+import mongoose from "mongoose";
 // import { verifyEmail } from "../../utils/templates/htmls";
 
 const createUser = async (req: any, res: any) => {
@@ -74,6 +75,53 @@ const signIn = async (req: any, res: any) => {
   }
 };
 
+const updateUser = async (req: any, res: any) => {
+  if (!req.body) {
+    return res.status(400).json({ message: "Data to update cannot be empty" });
+  }
+
+  const { id, ...rest } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: "id is required to update this data" });
+  }
+
+  try {
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(id) },
+      rest,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "No user found with this id" });
+    }
+
+    return res.status(202).json({
+      data: updatedUser,
+      message: "User updated Successfully",
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    return res.status(500).json({
+      message: "There was an error updating user",
+      error: error.message,
+    });
+  }
+};
+
+const getUsers = async (model: any, _: any, res: any) => {
+  await model
+    ?.find({})
+    ?.populate("notifications")
+    ?.select("-password -salt -__v")
+    ?.then((data: any) => {
+      res?.status(200)?.json({
+        data,
+      });
+    });
+};
+
 const verifyToken = (req: any, res: any, next: any) => {
   const authorization = req.headers.authorization?.split(" ");
   const scheme = authorization?.[0].toLowerCase();
@@ -118,4 +166,4 @@ const confirmEmail = async (req: any, res: any) => {
     });
   }
 };
-export { createUser, signIn, verifyToken, confirmEmail };
+export { createUser, signIn, verifyToken, confirmEmail, updateUser, getUsers };

@@ -19,7 +19,6 @@ const TagSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Category",
     },
-    image: { type: mongoose.SchemaTypes.String, required: false, default: "" },
     isActive: { type: mongoose.SchemaTypes.Boolean, default: true },
   },
   {
