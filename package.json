@@ -1,6 +1,5 @@
 {
   "name": "engine",
-  "packageManager": "yarn@4.6.0",
   "description": "engine to allows users to create, view, edit, and delete notes",
   "main": "index.js",
   "repository": "git@github.com:allegro/engine.git",
